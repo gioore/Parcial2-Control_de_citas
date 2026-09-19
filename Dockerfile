@@ -18,6 +18,7 @@ RUN composer install \
     --no-interaction \
     --no-progress \
     --prefer-dist \
+    --no-scripts \
     --optimize-autoloader
 
 FROM php:8.4-apache
@@ -37,6 +38,7 @@ COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.con
 COPY docker/entrypoint.sh /usr/local/bin/his-citas-entrypoint
 
 RUN chmod +x /usr/local/bin/his-citas-entrypoint \
+    && php artisan package:discover --ansi \
     && chown -R www-data:www-data storage bootstrap/cache
 
 ENTRYPOINT ["his-citas-entrypoint"]
