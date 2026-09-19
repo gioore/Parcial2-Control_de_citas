@@ -53,3 +53,25 @@ npm run build
 ```
 
 El archivo `.env` es local y no debe incluirse en commits. La configuracion de pruebas utiliza SQLite en memoria y no requiere MySQL para ejecutar la suite inicial.
+
+## MySQL con Docker
+
+El entorno de desarrollo utiliza MySQL 8 dentro de Docker. Despues de copiar `.env.example` a `.env`, ejecutar:
+
+```bash
+docker compose up -d
+docker compose ps
+php artisan migrate
+```
+
+Para detener el servicio sin eliminar los datos:
+
+```bash
+docker compose down
+```
+
+El volumen `his-citas-mysql-data` conserva la informacion aunque el contenedor se detenga. Para eliminar tambien la persistencia de forma intencional:
+
+```bash
+docker compose down -v
+```
