@@ -23,7 +23,7 @@ class AppointmentService
     public function create(array $data): Appointment
     {
         return DB::transaction(function () use ($data) {
-            return Appointment::create($data)->load(['patient', 'doctor']);
+            return Appointment::create($data)->refresh()->load(['patient', 'doctor']);
         });
     }
 
