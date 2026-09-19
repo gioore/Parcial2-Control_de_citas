@@ -26,3 +26,30 @@ Las ramas de funcionalidad se integran primero mediante Pull Request hacia `deve
 - PHP 8.2+
 - MySQL 8 en Docker
 - Blade, Vite y FullCalendar
+
+## Instalacion local
+
+1. Instalar dependencias PHP y JavaScript:
+
+```bash
+composer install
+npm install
+```
+
+2. Crear el archivo de entorno y generar la clave de la aplicacion:
+
+```bash
+copy .env.example .env
+php artisan key:generate
+```
+
+En Git Bash se puede utilizar `cp .env.example .env` en lugar de `copy`.
+
+3. Ejecutar las validaciones iniciales:
+
+```bash
+php artisan test
+npm run build
+```
+
+El archivo `.env` es local y no debe incluirse en commits. La configuracion de pruebas utiliza SQLite en memoria y no requiere MySQL para ejecutar la suite inicial.
