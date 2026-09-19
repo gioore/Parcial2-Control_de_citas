@@ -53,3 +53,41 @@ npm run build
 ```
 
 El archivo `.env` es local y no debe incluirse en commits. La configuracion de pruebas utiliza SQLite en memoria y no requiere MySQL para ejecutar la suite inicial.
+
+## MySQL con Docker
+
+El entorno completo utiliza Laravel, Apache, Vite compilado y MySQL 8 dentro de Docker. No es necesario instalar PHP, Composer, Node ni MySQL localmente.
+
+Ejecutar desde la raiz del proyecto:
+
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+La aplicacion quedara disponible en:
+
+```text
+http://localhost:8000
+```
+
+El contenedor `app` espera a que MySQL este saludable y ejecuta las migraciones automaticamente al iniciar.
+
+Para consultar los logs:
+
+```bash
+docker compose logs -f app
+docker compose logs -f mysql
+```
+
+Para detener el servicio sin eliminar los datos:
+
+```bash
+docker compose down
+```
+
+El volumen `his-citas-mysql-data` conserva la informacion aunque el contenedor se detenga. Para eliminar tambien la persistencia de forma intencional:
+
+```bash
+docker compose down -v
+```
