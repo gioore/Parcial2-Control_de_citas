@@ -56,4 +56,50 @@ class AppointmentApiTest extends TestCase
             'status' => 'confirmed',
         ]);
     }
+
+    public function test_it_rejects_a_doctor_schedule_conflict(): void
+    {
+        $doctor = Doctor::factory()->create();
+        $patient = Patient::factory()->create();
+
+        Appointment::factory()->create([
+            'doctor_id' => $doctor->id,
+            'start_at' => '2026-10-01 09:00:00',
+            'end_at' => '2026-10-01 10:00:00',
+        ]);
+
+        $response = $this->postJson('/api/appointments', [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'start_at' => '2026-10-01 09:30:00',
+            'end_at' => '2026-10-01 10:30:00',
+            'reason' => 'Horario en conflicto',
+        ]);
+
+        $response->assertStatus(409)
+            ->assertJsonPath('message', 'El doctor ya tiene una cita activa en ese horario.');
+    }
+
+    public function test_cancelled_appointments_do_not_block_a_schedule(): void
+    {
+        $doctor = Doctor::factory()->create();
+        $patient = Patient::factory()->create();
+
+        Appointment::factory()->create([
+            'doctor_id' => $doctor->id,
+            'start_at' => '2026-10-01 09:00:00',
+            'end_at' => '2026-10-01 10:00:00',
+            'status' => 'cancelled',
+        ]);
+
+        $response = $this->postJson('/api/appointments', [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'start_at' => '2026-10-01 09:30:00',
+            'end_at' => '2026-10-01 10:30:00',
+            'reason' => 'Horario liberado',
+        ]);
+
+        $response->assertCreated();
+    }
 }
