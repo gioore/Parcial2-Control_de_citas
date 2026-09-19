@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: his-citas-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-his_citas}
+      MYSQL_USER: ${DB_USERNAME:-his_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-his_app_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - his_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  his_mysql_data:
+    name: his-citas-mysql-data
