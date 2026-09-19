@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Appointment;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
