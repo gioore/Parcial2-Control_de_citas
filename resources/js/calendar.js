@@ -21,10 +21,18 @@ if (calendarElement) {
 
     const closeModal = (element) => element.close();
 
-    const openForm = (start, end = '') => {
+    const toDateTimeLocal = (value, time) => {
+        if (!value) return '';
+
+        return value.length === 10 ? `${value}T${time}` : value.slice(0, 16);
+    };
+
+    const openForm = (start, end = '', allDay = false) => {
         form.reset();
-        form.elements.start_at.value = start ? start.slice(0, 16) : '';
-        form.elements.end_at.value = end ? end.slice(0, 16) : '';
+        form.elements.start_at.value = toDateTimeLocal(start, '09:00');
+        form.elements.end_at.value = allDay
+            ? toDateTimeLocal(start, '09:45')
+            : toDateTimeLocal(end, '09:45');
         modal.showModal();
     };
 
@@ -81,7 +89,7 @@ if (calendarElement) {
                 showMessage(error.message, 'error');
             }
         },
-        select: (selection) => openForm(selection.startStr, selection.endStr),
+        select: (selection) => openForm(selection.startStr, selection.endStr, selection.allDay),
         eventClick: ({ event }) => {
             const appointment = event.extendedProps;
             document.querySelector('#detail-content').innerHTML = `
